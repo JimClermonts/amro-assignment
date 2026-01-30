@@ -7,10 +7,10 @@ import io.ktor.client.request.parameter
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import nl.amro.android.app.data.model.GenreListResponse
-import nl.amro.android.app.data.model.MovieDetails
-import nl.amro.android.app.data.model.MovieDto
-import nl.amro.android.app.data.model.TrendingMoviesResponse
+import nl.amro.android.app.model.GenreListResponse
+import nl.amro.android.app.model.MovieDetails
+import nl.amro.android.app.model.MovieDto
+import nl.amro.android.app.model.TrendingMoviesResponse
 import nl.amro.android.app.model.Result
 import javax.inject.Inject
 import javax.inject.Singleton

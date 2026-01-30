@@ -1,8 +1,8 @@
 package nl.amro.android.app.data.remote
 
-import nl.amro.android.app.data.model.GenreListResponse
-import nl.amro.android.app.data.model.MovieDetails
-import nl.amro.android.app.data.model.MovieDto
+import nl.amro.android.app.model.GenreListResponse
+import nl.amro.android.app.model.MovieDetails
+import nl.amro.android.app.model.MovieDto
 import nl.amro.android.app.model.Result
 
 /**

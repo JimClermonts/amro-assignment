@@ -1,4 +1,4 @@
-package nl.amro.android.app.data.model
+package nl.amro.android.app.model
 
 import kotlinx.serialization.Serializable
 

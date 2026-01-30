@@ -101,7 +101,7 @@
 ### Package Structure
 ```
 nl.amro.android.app/
-├── model/                 (Result class - accessible by all layers)
+├── model/                 (All models - Result, DTOs - accessible by all layers)
 ├── di/                    (app-wide DI: dispatcher qualifiers)
 ├── http/                  (HttpClient configuration)
 ├── ui/
@@ -111,9 +111,9 @@ nl.amro.android.app/
 │   │   └── detail/        (ui, viewmodel)
 │   ├── util/              (error handling - ErrorHandler)
 │   └── common/            (shared UI components)
-├── domain/                (usecases, domain models)
+├── domain/                (usecases)
 │   └── di/
-├── data/                  (repository, datasources)
+├── data/                  (repository, datasources, entities, mappers)
 │   └── di/
 ```
 
