@@ -1,6 +1,5 @@
 package nl.amro.android.app.data.repository
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import nl.amro.android.app.data.datasource.LocalDataSource
@@ -11,8 +10,6 @@ import nl.amro.android.app.model.MovieDto
 import nl.amro.android.app.model.Result
 import javax.inject.Inject
 import javax.inject.Singleton
-
-private const val TAG = "MoviesRepository"
 
 /**
  * Implementation of MoviesRepository.
@@ -37,22 +34,17 @@ class MoviesRepositoryImpl @Inject constructor(
      * 6. If API fails and no cache, emit error
      */
     override fun getTrendingMovies(): Flow<Result<List<MovieDto>>> = flow {
-        Log.d(TAG, "getTrendingMovies: Starting")
         emit(Result.Loading)
 
         // First, emit cached data if available (fast response)
-        Log.d(TAG, "getTrendingMovies: Checking cache")
         val cachedMovies = localDataSource.getMovies()
-        Log.d(TAG, "getTrendingMovies: Cache has ${cachedMovies.size} movies")
         if (cachedMovies.isNotEmpty()) {
             emit(Result.Success(cachedMovies))
         }
 
         // Then fetch fresh data from API
-        Log.d(TAG, "getTrendingMovies: Fetching from API")
         when (val remoteResult = remoteDataSource.getTrendingMovies()) {
             is Result.Success -> {
-                Log.d(TAG, "getTrendingMovies: API returned ${remoteResult.data.size} movies")
                 // Save to cache
                 localDataSource.clearMovies()
                 localDataSource.saveMovies(remoteResult.data)
@@ -60,7 +52,6 @@ class MoviesRepositoryImpl @Inject constructor(
                 emit(Result.Success(remoteResult.data))
             }
             is Result.Error -> {
-                Log.e(TAG, "getTrendingMovies: API error", remoteResult.exception)
                 // If we already emitted cached data, don't emit error
                 // If no cache was available, emit error
                 if (cachedMovies.isEmpty()) {
@@ -70,7 +61,6 @@ class MoviesRepositoryImpl @Inject constructor(
             }
             is Result.Loading -> { /* Already emitted Loading */ }
         }
-        Log.d(TAG, "getTrendingMovies: Done")
     }
 
     /**

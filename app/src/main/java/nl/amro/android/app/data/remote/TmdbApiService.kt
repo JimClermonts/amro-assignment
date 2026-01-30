@@ -1,6 +1,5 @@
 package nl.amro.android.app.data.remote
 
-import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -15,8 +14,6 @@ import nl.amro.android.app.model.TrendingMoviesResponse
 import nl.amro.android.app.model.Result
 import javax.inject.Inject
 import javax.inject.Singleton
-
-private const val TAG = "TmdbApiService"
 
 /**
  * Implementation of TmdbApi using Ktor HttpClient.
@@ -42,12 +39,10 @@ class TmdbApiService @Inject constructor(
      * @return Result containing list of MovieDto or error
      */
     override suspend fun getTrendingMovies(): Result<List<MovieDto>> = coroutineScope {
-        Log.d(TAG, "getTrendingMovies: Starting API calls")
         try {
             // Make 5 parallel API calls for pages 1-5
             val deferredResults = (1..PAGES_TO_FETCH).map { page ->
                 async {
-                    Log.d(TAG, "getTrendingMovies: Fetching page $page")
                     httpClient.get(TRENDING_MOVIES_ENDPOINT) {
                         parameter("language", LANGUAGE)
                         parameter("page", page)
@@ -56,14 +51,14 @@ class TmdbApiService @Inject constructor(
             }
 
             // Wait for all requests to complete and combine results
-            Log.d(TAG, "getTrendingMovies: Waiting for all pages")
+            // Use distinctBy to remove duplicates (same movie can appear on multiple pages)
             val allResponses = deferredResults.awaitAll()
-            val allMovies = allResponses.flatMap { it.results }
-            Log.d(TAG, "getTrendingMovies: Got ${allMovies.size} movies total")
+            val allMovies = allResponses
+                .flatMap { it.results }
+                .distinctBy { it.id }
 
             Result.Success(allMovies)
         } catch (e: Exception) {
-            Log.e(TAG, "getTrendingMovies: Error", e)
             Result.Error(e)
         }
     }

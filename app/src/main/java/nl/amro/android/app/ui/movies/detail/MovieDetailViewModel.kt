@@ -11,11 +11,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import nl.amro.android.app.domain.GetMovieDetailsUseCase
 import nl.amro.android.app.model.Result
+import nl.amro.android.app.ui.navigation.NavArgs
+import nl.amro.android.app.ui.navigation.NavRoutes
 import javax.inject.Inject
 
 /**
  * ViewModel for the movie detail screen.
- * Follows MVVM principles with StateFlow for UI state updates.
+ * Loads movie details using the movieId from navigation.
  */
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
@@ -23,32 +25,28 @@ class MovieDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MovieDetailUiState())
+    private val movieId: Int = savedStateHandle.get<Int>(NavArgs.MOVIE_ID) ?: 0
+    private val passedTitle: String = NavRoutes.decodeNavArg(
+        savedStateHandle.get<String>(NavArgs.TITLE) ?: ""
+    )
+    private val passedPosterPath: String? = NavRoutes.decodeNavArg(
+        savedStateHandle.get<String>(NavArgs.POSTER_PATH) ?: ""
+    ).ifEmpty { null }
+
+    private val _uiState = MutableStateFlow(
+        MovieDetailUiState(
+            title = passedTitle,
+            posterPath = passedPosterPath
+        )
+    )
     val uiState: StateFlow<MovieDetailUiState> = _uiState.asStateFlow()
 
-    // Movie ID from navigation arguments
-    private val movieId: Int = savedStateHandle.get<Int>("movieId") ?: -1
-
     init {
-        // Get basic info from navigation arguments for immediate display
-        val basicTitle = savedStateHandle.get<String>("title")
-        val basicPosterPath = savedStateHandle.get<String>("posterPath")
-        
-        _uiState.update { 
-            it.copy(
-                basicTitle = basicTitle,
-                basicPosterPath = basicPosterPath
-            )
-        }
-        
-        if (movieId != -1) {
-            loadMovieDetails()
-        }
+        loadMovieDetails()
     }
 
     /**
      * Load movie details from repository.
-     * Emits cached data first (if available), then fresh data from API.
      */
     private fun loadMovieDetails() {
         viewModelScope.launch {
@@ -58,17 +56,20 @@ class MovieDetailViewModel @Inject constructor(
                         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
                     }
                     is Result.Success -> {
-                        _uiState.update { 
+                        _uiState.update {
                             it.copy(
-                                isLoading = false, 
-                                movieDetails = result.data
+                                isLoading = false,
+                                movieDetails = result.data,
+                                // Update title/poster if we got better data
+                                title = result.data.title,
+                                posterPath = result.data.posterPath
                             )
                         }
                     }
                     is Result.Error -> {
-                        _uiState.update { 
+                        _uiState.update {
                             it.copy(
-                                isLoading = false, 
+                                isLoading = false,
                                 errorMessage = result.exception.message
                             )
                         }
@@ -83,14 +84,5 @@ class MovieDetailViewModel @Inject constructor(
      */
     fun clearError() {
         _uiState.update { it.copy(errorMessage = null) }
-    }
-
-    /**
-     * Retry loading movie details.
-     */
-    fun retry() {
-        if (movieId != -1) {
-            loadMovieDetails()
-        }
     }
 }

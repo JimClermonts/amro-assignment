@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -67,6 +68,15 @@ fun MoviesScreenContent(
     onErrorShown: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    
+    // Create a NEW LazyListState when sort option or filters change
+    // Using remember with keys forces a new state (starting at index 0) when sort/filter changes
+    val listState = remember(uiState.sortOption, uiState.selectedGenreIds) {
+        LazyListState(
+            firstVisibleItemIndex = 0,
+            firstVisibleItemScrollOffset = 0
+        )
+    }
 
     // Show error in snackbar
     LaunchedEffect(uiState.errorMessage) {
@@ -126,7 +136,8 @@ fun MoviesScreenContent(
                     MoviesList(
                         movies = uiState.displayMovies,
                         genres = uiState.genres,
-                        onMovieClick = onMovieClick
+                        onMovieClick = onMovieClick,
+                        listState = listState
                     )
                 }
             }
@@ -138,16 +149,18 @@ fun MoviesScreenContent(
 private fun MoviesList(
     movies: List<MovieDto>,
     genres: List<Genre>,
-    onMovieClick: (MovieDto) -> Unit
+    onMovieClick: (MovieDto) -> Unit,
+    listState: LazyListState
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = listState,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(
-            items = movies,
-            key = { movie -> movie.id }
+            items = movies
+            // Note: Removed key parameter to prevent scroll position preservation on reorder
         ) { movie ->
             MovieCard(
                 movie = movie,
