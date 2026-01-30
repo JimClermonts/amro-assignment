@@ -61,13 +61,3 @@ fun AmroMoviesTheme(
         content = content
     )
 }
-
-// Keep for backward compatibility with existing code
-@Composable
-fun MyApplicationTheme(
-    darkTheme: Boolean = false,
-    dynamicColor: Boolean = false,
-    content: @Composable () -> Unit
-) {
-    AmroMoviesTheme(content = content)
-}

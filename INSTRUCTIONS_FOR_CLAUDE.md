@@ -229,11 +229,6 @@ Match the API response structure as much as possible:
 - Test files location: `app/src/test/java/nl/amro/android/app/`
 - Use `TestData.kt` object for consistent test data across all tests
 
-## Visual Testing
-- Use Compose Preview Screenshot Testing to verify the screens don't change while developing.
-- https://developer.android.com/studio/preview/compose-screenshot-testing
-- These screenshot tests should be in a directory called screenshotTest
-
 ---
 
 ## API Resources
@@ -301,20 +296,14 @@ For each step, compile and run to verify workings.
 - Create SortDropdown component
 - Create MoviesScreen with all components
 
-### Step 8: List Preview Screenshots
-- Make the @Preview screenshots for list view (multiple states: loading, empty, filtered)
-
-### Step 9: Navigation
+### Step 8: Navigation
 - Set up NavHost with Navigation Compose
 - Make items in the listview clickable
 - Navigate to detail screen passing movieId, title, posterPath
 
-### Step 10: Detail View
+### Step 9: Detail View
 - Create MovieDetailScreen with all movie details
 - Implement ErrorHandler for Dutch error messages
-
-### Step 11: Detail Preview Screenshots
-- Generate @Preview screenshots for the detail view (loading, success, error states)
 
 ---
 
@@ -354,7 +343,11 @@ All user-visible strings must be defined in `res/values/strings.xml`:
     <string name="revenue_label">Revenue</string>
     <string name="runtime_format">%d min</string>
     <string name="vote_format">%s / 10</string>
-    <string name="vote_count_format">(%d votes)</string>
+    <!-- Plurals -->
+    <plurals name="vote_count">
+        <item quantity="one">(%d vote)</item>
+        <item quantity="other">(%d votes)</item>
+    </plurals>
     <string name="view_on_imdb">View on IMDB</string>
     
     <!-- Error messages (Dutch) -->
@@ -379,7 +372,7 @@ All questions have been answered. Ready to implement!
 - **Images**: w500 size from TMDB via Coil AsyncImage
 - **Language**: English API responses, Dutch error messages and UI text
 - **Theme**: Light mode only, Material Design 3, Reply app style colors
-- **Testing**: Mockito for unit tests, Compose Screenshot Testing for visual tests
+- **Testing**: Mockito for unit tests
 - **Strings**: All user-visible strings externalized to strings.xml
 - **Naming**: MoviesUiState (not MoviesListUiState), MovieDetails (not MovieDetailsDto)
 - **Package structure**: UseCases directly in domain package, models in shared model package

@@ -184,35 +184,4 @@ class MoviesRepositoryTest {
         verify(remoteDataSource).getGenres()
         verify(localDataSource).saveGenres(freshGenres)
     }
-
-    // refreshMovies tests
-
-    @Test
-    fun `refreshMovies clears cache and saves fresh data`() = runTest {
-        // Given
-        val freshMovies = TestData.sampleMovies
-        whenever(remoteDataSource.getTrendingMovies()).thenReturn(Result.Success(freshMovies))
-
-        // When
-        val result = repository.refreshMovies()
-
-        // Then
-        assertTrue(result is Result.Success)
-        verify(localDataSource).clearMovies()
-        verify(localDataSource).saveMovies(freshMovies)
-    }
-
-    @Test
-    fun `refreshMovies returns error on API failure`() = runTest {
-        // Given
-        val exception = RuntimeException("Network error")
-        whenever(remoteDataSource.getTrendingMovies()).thenReturn(Result.Error(exception))
-
-        // When
-        val result = repository.refreshMovies()
-
-        // Then
-        assertTrue(result is Result.Error)
-        verify(localDataSource, never()).clearMovies()
-    }
 }

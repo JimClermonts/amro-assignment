@@ -1,7 +1,6 @@
 package nl.amro.android.app.ui.movies.detail
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,13 +54,16 @@ import nl.amro.android.app.ui.common.LoadingIndicator
 import nl.amro.android.app.ui.theme.AmroMoviesTheme
 import java.text.NumberFormat
 import java.util.Locale
+import androidx.core.net.toUri
 
 private const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
 private const val IMDB_BASE_URL = "https://www.imdb.com/title/"
 
 /**
  * Movie detail screen showing full movie information.
+ * Note: movieId, title, posterPath are passed via navigation but retrieved from SavedStateHandle in ViewModel.
  */
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun MovieDetailScreen(
     movieId: Int,
@@ -138,7 +141,7 @@ fun MovieDetailScreenContent(
                 MovieDetailContent(
                     movieDetails = uiState.movieDetails!!,
                     onImdbClick = { imdbId ->
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$IMDB_BASE_URL$imdbId"))
+                        val intent = Intent(Intent.ACTION_VIEW, "$IMDB_BASE_URL$imdbId".toUri())
                         context.startActivity(intent)
                     }
                 )
@@ -250,7 +253,7 @@ private fun MovieDetailContent(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = stringResource(R.string.vote_count_format, movieDetails.voteCount),
+                            text = pluralStringResource(R.plurals.vote_count, movieDetails.voteCount, movieDetails.voteCount),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

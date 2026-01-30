@@ -214,7 +214,6 @@ private fun MoviesScreenPreview() {
         MoviesScreenContent(
             uiState = MoviesUiState(
                 isLoading = false,
-                movies = previewMovies,
                 filteredMovies = previewMovies,
                 genres = previewGenres,
                 selectedGenreIds = emptySet(),
@@ -237,7 +236,6 @@ private fun MoviesScreenLoadingPreview() {
         MoviesScreenContent(
             uiState = MoviesUiState(
                 isLoading = true,
-                movies = emptyList(),
                 filteredMovies = emptyList(),
                 genres = emptyList(),
                 selectedGenreIds = emptySet(),
@@ -260,7 +258,6 @@ private fun MoviesScreenEmptyPreview() {
         MoviesScreenContent(
             uiState = MoviesUiState(
                 isLoading = false,
-                movies = emptyList(),
                 filteredMovies = emptyList(),
                 genres = emptyList(),
                 selectedGenreIds = emptySet(),
@@ -283,7 +280,6 @@ private fun MoviesScreenFilteredPreview() {
         MoviesScreenContent(
             uiState = MoviesUiState(
                 isLoading = false,
-                movies = previewMovies,
                 filteredMovies = previewMovies.filter { 28 in it.genreIds },
                 genres = previewGenres,
                 selectedGenreIds = setOf(28),

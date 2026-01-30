@@ -9,7 +9,6 @@ import nl.amro.android.app.model.MovieDto
  */
 data class MoviesUiState(
     val isLoading: Boolean = true,
-    val movies: List<MovieDto> = emptyList(),
     val filteredMovies: List<MovieDto> = emptyList(),
     val genres: List<Genre> = emptyList(),
     val selectedGenreIds: Set<Int> = emptySet(),
@@ -27,25 +26,4 @@ data class MoviesUiState(
      */
     val isEmpty: Boolean
         get() = !isLoading && filteredMovies.isEmpty()
-
-    /**
-     * Returns true if a filter is active (genres selected).
-     */
-    val isFilterActive: Boolean
-        get() = selectedGenreIds.isNotEmpty()
-}
-
-/**
- * Represents a movie item for display in the list.
- * Contains the movie data plus resolved genre names.
- */
-data class MovieListItem(
-    val movie: MovieDto,
-    val genreNames: List<String>
-) {
-    /**
-     * Returns genre names limited to 2, formatted as "Action, Adventure".
-     */
-    val displayGenres: String
-        get() = genreNames.take(2).joinToString(", ")
 }

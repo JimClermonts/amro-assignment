@@ -58,7 +58,6 @@ class MoviesViewModel @Inject constructor(
                         _uiState.update { 
                             it.copy(
                                 isLoading = false, 
-                                movies = result.data,
                                 filteredMovies = filteredAndSorted
                             ) 
                         }
@@ -112,14 +111,6 @@ class MoviesViewModel @Inject constructor(
         }
         
         _uiState.update { it.copy(selectedGenreIds = newSelected) }
-        applyFilterAndSort()
-    }
-
-    /**
-     * Clear all genre filters.
-     */
-    fun clearGenreFilters() {
-        _uiState.update { it.copy(selectedGenreIds = emptySet()) }
         applyFilterAndSort()
     }
 

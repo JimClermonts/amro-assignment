@@ -132,26 +132,4 @@ class MoviesRepositoryImpl @Inject constructor(
             }
         }
     }
-
-    /**
-     * Force refresh movies from API.
-     */
-    override suspend fun refreshMovies(): Result<List<MovieDto>> {
-        return when (val remoteResult = remoteDataSource.getTrendingMovies()) {
-            is Result.Success -> {
-                localDataSource.clearMovies()
-                localDataSource.saveMovies(remoteResult.data)
-                Result.Success(remoteResult.data)
-            }
-            is Result.Error -> remoteResult
-            is Result.Loading -> Result.Loading
-        }
-    }
-
-    /**
-     * Get genres for a list of IDs using cached data.
-     */
-    override suspend fun getGenresByIds(genreIds: List<Int>): List<Genre> {
-        return localDataSource.getGenresByIds(genreIds)
-    }
 }

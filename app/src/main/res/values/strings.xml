@@ -29,8 +29,13 @@
     <string name="revenue_label">Revenue</string>
     <string name="runtime_format">%1$d min</string>
     <string name="vote_format">%1$s / 10</string>
-    <string name="vote_count_format">(%1$d votes)</string>
     <string name="view_on_imdb">View on IMDB</string>
+
+    <!-- Plurals -->
+    <plurals name="vote_count">
+        <item quantity="one">(%1$d vote)</item>
+        <item quantity="other">(%1$d votes)</item>
+    </plurals>
 
     <!-- Error messages (Dutch) -->
     <string name="error_no_internet">Geen internetverbinding</string>

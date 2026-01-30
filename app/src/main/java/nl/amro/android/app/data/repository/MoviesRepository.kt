@@ -33,18 +33,4 @@ interface MoviesRepository {
      * Emits cached data first (if available), then fetches fresh data from API on first open.
      */
     fun getGenres(): Flow<Result<List<Genre>>>
-
-    /**
-     * Force refresh movies from API.
-     * Clears cache and fetches fresh data.
-     */
-    suspend fun refreshMovies(): Result<List<MovieDto>>
-
-    /**
-     * Get genres for a list of genre IDs.
-     * Uses cached genres to map IDs to names.
-     *
-     * @param genreIds List of genre IDs
-     */
-    suspend fun getGenresByIds(genreIds: List<Int>): List<Genre>
 }

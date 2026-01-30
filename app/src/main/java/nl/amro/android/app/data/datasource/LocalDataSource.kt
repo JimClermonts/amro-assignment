@@ -1,7 +1,5 @@
 package nl.amro.android.app.data.datasource
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import nl.amro.android.app.data.local.dao.GenreDao
 import nl.amro.android.app.data.local.dao.MovieDao
 import nl.amro.android.app.data.local.dao.MovieDetailsDao
@@ -27,9 +25,6 @@ class LocalDataSource @Inject constructor(
     private val genreDao: GenreDao
 ) {
     // Movies
-    fun getMoviesFlow(): Flow<List<MovieDto>> =
-        movieDao.getAllMovies().map { it.toDtos() }
-
     suspend fun getMovies(): List<MovieDto> =
         movieDao.getAllMoviesOnce().toDtos()
 
@@ -41,13 +36,7 @@ class LocalDataSource @Inject constructor(
         movieDao.deleteAllMovies()
     }
 
-    suspend fun hasMovies(): Boolean =
-        movieDao.getMovieCount() > 0
-
     // Movie Details
-    fun getMovieDetailsFlow(movieId: Int): Flow<MovieDetails?> =
-        movieDetailsDao.getMovieDetailsFlow(movieId).map { it?.toDto() }
-
     suspend fun getMovieDetails(movieId: Int): MovieDetails? =
         movieDetailsDao.getMovieDetails(movieId)?.toDto()
 
@@ -56,19 +45,10 @@ class LocalDataSource @Inject constructor(
     }
 
     // Genres
-    fun getGenresFlow(): Flow<List<Genre>> =
-        genreDao.getAllGenres().map { it.toGenreDtos() }
-
     suspend fun getGenres(): List<Genre> =
         genreDao.getAllGenresOnce().toGenreDtos()
 
     suspend fun saveGenres(genres: List<Genre>) {
         genreDao.insertGenres(genres.toEntities())
     }
-
-    suspend fun hasGenres(): Boolean =
-        genreDao.getGenreCount() > 0
-
-    suspend fun getGenresByIds(genreIds: List<Int>): List<Genre> =
-        genreDao.getGenresByIds(genreIds).toGenreDtos()
 }
