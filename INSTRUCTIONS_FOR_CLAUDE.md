@@ -101,6 +101,9 @@
 ### Package Structure
 ```
 nl.amro.android.app/
+├── model/                 (Result class - accessible by all layers)
+├── di/                    (app-wide DI: dispatcher qualifiers)
+├── http/                  (HttpClient configuration)
 ├── ui/
 │   ├── di/
 │   ├── movies/
@@ -112,7 +115,6 @@ nl.amro.android.app/
 │   └── di/
 ├── data/                  (repository, datasources)
 │   └── di/
-└── util/                  (httpclient, dispatcher qualifiers)
 ```
 
 ### Data Flow
