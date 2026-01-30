@@ -17,21 +17,56 @@
 - The listview must have 100 items.
 - The 100 items are this week's top 100 trending movies.
 - Each item has a title, image and genre.
+- **Vertical list with cards** (Netflix style).
+- **Card height**: Fixed 120dp.
+- **Poster aspect ratio**: Maintain 2:3 ratio (full poster visible).
 - The top right corner of the listview has a filter button. 
 - The filter button has a list of genres that can be selected / unselected.
+- **Filter/Sort UI**: Simple dropdown menu.
+- **Genre filter display**: No movie count (just "Action", not "Action (15)").
+- **Filter/Sort persistence**: Reset on each app launch (ephemeral).
 - By default all genres are unselected.
 - When all genres are unselected, everything is shown ("no filter applied = show all").
 - When 1 or more genres are selected, only those genres are shown.
 - The top right corner also has a sort button where we can sort based on: popularity, title, release date with descending or ascending.
+- **Sort UI**: Combined dropdown with 6 options:
+  - "Popularity (high to low)" - default
+  - "Popularity (low to high)"
+  - "Title (A-Z)"
+  - "Title (Z-A)"
+  - "Release date (newest)"
+  - "Release date (oldest)"
+- **Default sort**: Popularity (high to low) - matches API order.
+- **No refresh mechanism** - only API call on screen loading.
+- **App bar title**: "AMRO Movies"
+
+### List Item Display
+- **Multiple genres**: Limited to 2 (e.g., "Action, Adventure")
+- **Title truncation**: Truncate with ellipsis if too long
 
 ### Detail Screen
 - There must be 1 detailview that is launched when clicking the item in the listview.
+- **Navigation data**: Pass basic movie data (title, poster) for immediate display while loading full details.
+- **Layout stability**: Views should have fixed width and height so that when still loading, the positioning of existing view elements (title, poster) doesn't change after done loading.
 - When a user selects a movie from the list, they should be taken to a detail screen that displays more information about the movie.
 - These are the items that should be shown: title, tagline, description, budget, link to imdb, image, vote average, revenue, runtime, genre, vote count, status, release date.
+- **Budget/Revenue formatting**: Dutch formatting (€1.000.000)
+- **IMDB Link**: Opens in external browser
+- **Runtime format**: "120 min"
+- **Vote average display**: Numeric "7.5 / 10"
+- **Back navigation**: App bar with back arrow
+- **Loading indicator**: Linear progress bar at top (same as list)
 
 ### Screens General
 - Each view (MoviesScreen + MovieDetail) should be made using latest Jetpack Compose.
 - Each screen must have @Preview @Composable to show how it looks.
+
+### Loading & States
+- **Loading indicator**: Linear progress bar at top
+- **Empty state text**: "Geen films geladen"
+
+### Theme & Appearance
+- **Light mode only** (no dark mode support)
 
 ---
 
@@ -40,10 +75,18 @@
 - Responses should be communicated with a snackbar.
 - The snackbar should have specific information per error.
 - The snackbar should translate a network error to a user-friendly message in Dutch language.
+- **Snackbar auto-dismiss**: 5 seconds
+- **Snackbar retry action**: No retry button
 - When the app is used for the first time without internet, an error message should be shown.
 - Repositories and viewmodels should not have context object.
 - **ErrorHandler should be part of the UI layer** because it needs Context object to get the strings. Domain shouldn't have context references so that unit tests can run on any computer.
 - If a user clicks a movie they haven't viewed before and there's no internet, show an error message.
+
+### Dutch Error Messages
+- **No internet**: "Geen internetverbinding"
+- **Server error**: "Probleem aan onze kant, probeer het later opnieuw."
+- **Unknown error**: "Er is iets misgegaan."
+- **Movie not found**: "Film niet gevonden."
 
 ---
 
@@ -69,15 +112,22 @@ nl.amro.android.app/
 │   └── di/
 ├── data/                  (repository, datasources)
 │   └── di/
-└── util/                  (httpclient)
+└── util/                  (httpclient, dispatcher qualifiers)
 ```
 
 ### Data Flow
 - There should be a MoviesRepository that gets fast data from the database, and slower but more recent data from the API.
 - The data should be fetched using flows so that the data gets updated as soon as newer data is available.
+- **Cache duration**: Always fetch fresh on app launch.
 - When there is no internet, show the database.
 - When an item is clicked, and the movie detail info is loaded, save into database.
 - When an item is clicked, and the movie detail info is already present from database, load this first but fetch the API version directly after this.
+
+### Dispatcher Qualifiers (Hilt)
+Create these Hilt qualifiers for coroutine dispatchers:
+- `@IoDispatcher` for IO operations
+- `@MainDispatcher` for UI
+- `@DefaultDispatcher` for CPU-intensive work
 
 ### Result Type
 Use a generic Result class to pass result/error through all layers:
@@ -103,9 +153,20 @@ sealed class Result<out T> {
 - **Image Loading**: AsyncImage (androidx.compose)
 - **Navigation**: Navigation Compose
 
+### SDK Versions (keep existing)
+- **minSdk**: 31 (Android 12)
+- **targetSdk**: 36
+- **compileSdk**: 36
+
 ### API Calls
 - TMDB's trending endpoint returns 20 items per page.
 - To get 100 movies, make **5 API calls in parallel**.
+- **Genres fetch timing**: Only when user opens filter for the first time.
+- **API language**: English (en) - original English content
+
+### Images
+- **TMDB image size**: w500 (500px wide - large, sharp)
+- **Image base URL**: https://image.tmdb.org/t/p/w500
 
 ### Database Schema (Room)
 Match the API response structure as much as possible:
@@ -254,7 +315,17 @@ Generate @Preview screenshots for the detail view.
 
 ---
 
-## Open Questions (TO BE ANSWERED)
+## Specifications Complete
 
-<!-- Questions that still need clarification will be added here -->
+All questions have been answered. Ready to implement!
+
+### Summary of Key Decisions:
+- **List**: Vertical cards, 120dp fixed height, 2:3 poster ratio
+- **Navigation**: Pass basic movie data for immediate display
+- **Detail layout**: Fixed dimensions for layout stability during loading
+- **Filter/Sort**: Ephemeral (reset on app launch)
+- **Images**: w500 size from TMDB
+- **Language**: English API responses, Dutch error messages
+- **Theme**: Light mode only, Material Design 3, Reply app style
+- **Testing**: Mockito for unit tests, Compose Screenshot Testing for visual tests
 
