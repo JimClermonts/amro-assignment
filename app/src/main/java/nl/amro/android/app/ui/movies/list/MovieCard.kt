@@ -39,7 +39,7 @@ fun MovieCard(
     modifier: Modifier = Modifier
 ) {
     val genreNames = movie.genreIds
-        .take(2)
+        .take(6)
         .mapNotNull { genreId -> genres.find { it.id == genreId }?.name }
         .joinToString(", ")
 
@@ -138,14 +138,17 @@ private fun MovieCardLongTitlePreview() {
                 id = 2,
                 title = "Everything Everywhere All at Once: The Extended Director's Cut Edition",
                 posterPath = null,
-                genreIds = listOf(28, 35, 878),
+                genreIds = listOf(28, 35, 878, 18, 10749, 12),
                 releaseDate = "2022-03-25",
                 popularity = 80.0
             ),
             genres = listOf(
                 Genre(id = 28, name = "Action"),
                 Genre(id = 35, name = "Comedy"),
-                Genre(id = 878, name = "Science Fiction")
+                Genre(id = 878, name = "Science Fiction"),
+                Genre(id = 18, name = "Drama"),
+                Genre(id = 10749, name = "Romance"),
+                Genre(id = 12, name = "Adventure")
             ),
             onClick = {}
         )

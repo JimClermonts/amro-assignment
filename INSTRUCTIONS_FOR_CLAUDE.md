@@ -42,7 +42,7 @@
 - **App bar title**: "AMRO Movies" (use string resource)
 
 ### List Item Display
-- **Multiple genres**: Limited to 2 (e.g., "Action, Adventure")
+- **Multiple genres**: Limited to 6 (e.g., "Action, Adventure, Comedy, Drama, Romance, Sci-Fi"), ellipsize with "..." if too long for one line
 - **Title truncation**: Truncate with ellipsis if too long (maxLines = 2)
 - **Release year**: Show only year from release date
 
