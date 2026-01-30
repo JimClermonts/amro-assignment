@@ -52,8 +52,14 @@ class MoviesViewModel @Inject constructor(
                     }
                     is Result.Success -> {
                         allMovies = result.data
-                        applyFilterAndSort()
-                        _uiState.update { it.copy(isLoading = false, movies = result.data) }
+                        val filteredAndSorted = applyFilterAndSortSync(result.data)
+                        _uiState.update { 
+                            it.copy(
+                                isLoading = false, 
+                                movies = result.data,
+                                filteredMovies = filteredAndSorted
+                            ) 
+                        }
                     }
                     is Result.Error -> {
                         _uiState.update { 
@@ -135,35 +141,41 @@ class MoviesViewModel @Inject constructor(
      */
     private fun applyFilterAndSort() {
         viewModelScope.launch {
-            val currentState = _uiState.value
-            
-            // First filter
-            val filterResult = filterMoviesUseCase(
-                FilterMoviesUseCase.Params(
-                    movies = allMovies,
-                    selectedGenreIds = currentState.selectedGenreIds
-                )
+            val filteredAndSorted = applyFilterAndSortSync(allMovies)
+            _uiState.update { it.copy(filteredMovies = filteredAndSorted) }
+        }
+    }
+
+    /**
+     * Apply filter and sort synchronously (within same coroutine).
+     */
+    private suspend fun applyFilterAndSortSync(movies: List<MovieDto>): List<MovieDto> {
+        val currentState = _uiState.value
+        
+        // First filter
+        val filterResult = filterMoviesUseCase(
+            FilterMoviesUseCase.Params(
+                movies = movies,
+                selectedGenreIds = currentState.selectedGenreIds
             )
-            
-            val filteredMovies = when (filterResult) {
-                is Result.Success -> filterResult.data
-                else -> allMovies
-            }
-            
-            // Then sort
-            val sortResult = sortMoviesUseCase(
-                SortMoviesUseCase.Params(
-                    movies = filteredMovies,
-                    sortOption = currentState.sortOption
-                )
+        )
+        
+        val filteredMovies = when (filterResult) {
+            is Result.Success -> filterResult.data
+            else -> movies
+        }
+        
+        // Then sort
+        val sortResult = sortMoviesUseCase(
+            SortMoviesUseCase.Params(
+                movies = filteredMovies,
+                sortOption = currentState.sortOption
             )
-            
-            val sortedMovies = when (sortResult) {
-                is Result.Success -> sortResult.data
-                else -> filteredMovies
-            }
-            
-            _uiState.update { it.copy(filteredMovies = sortedMovies) }
+        )
+        
+        return when (sortResult) {
+            is Result.Success -> sortResult.data
+            else -> filteredMovies
         }
     }
 }

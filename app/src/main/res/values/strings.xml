@@ -1,3 +1,40 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">AMRO Movies</string>
+
+    <!-- App bar -->
+    <string name="app_bar_title">AMRO Movies</string>
+
+    <!-- Empty states -->
+    <string name="empty_movies">Geen films geladen</string>
+
+    <!-- Loading -->
+    <string name="loading_genres">Loading genres…</string>
+
+    <!-- Filter -->
+    <string name="filter">Filter</string>
+
+    <!-- Sort options -->
+    <string name="sort">Sort</string>
+    <string name="sort_popularity_desc">Popularity (high to low)</string>
+    <string name="sort_popularity_asc">Popularity (low to high)</string>
+    <string name="sort_title_asc">Title (A-Z)</string>
+    <string name="sort_title_desc">Title (Z-A)</string>
+    <string name="sort_release_date_desc">Release date (newest)</string>
+    <string name="sort_release_date_asc">Release date (oldest)</string>
+
+    <!-- Detail screen -->
+    <string name="navigate_back">Navigate back</string>
+    <string name="movie_poster">Movie poster</string>
+    <string name="budget_label">Budget</string>
+    <string name="revenue_label">Revenue</string>
+    <string name="runtime_format">%1$d min</string>
+    <string name="vote_format">%1$s / 10</string>
+    <string name="vote_count_format">(%1$d votes)</string>
+    <string name="view_on_imdb">View on IMDB</string>
+
+    <!-- Error messages (Dutch) -->
+    <string name="error_no_internet">Geen internetverbinding</string>
+    <string name="error_server">Probleem aan onze kant, probeer het later opnieuw.</string>
+    <string name="error_unknown">Er is iets misgegaan.</string>
+    <string name="error_movie_not_found">Film niet gevonden.</string>
 </resources>
