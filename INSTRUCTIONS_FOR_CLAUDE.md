@@ -1,7 +1,12 @@
+- Before you start and with each step, clarify first, ask questions and share your approach before initiating.
 
-
+- Asking questions include challenging my proposal, architecturaly, and library-wise.
+ 
 - I've made a hello world Android project in the directory.
 
+- When getting library versions, please get latest (=30 january, 2026).
+
+- Update this document with the result of our conversation so that this document can generate the correct code at once.
 
 Requirements.
 
