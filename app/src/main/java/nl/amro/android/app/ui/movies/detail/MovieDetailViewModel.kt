@@ -13,6 +13,7 @@ import nl.amro.android.app.domain.GetMovieDetailsUseCase
 import nl.amro.android.app.model.Result
 import nl.amro.android.app.ui.navigation.NavArgs
 import nl.amro.android.app.ui.navigation.NavRoutes
+import nl.amro.android.app.ui.util.ErrorHandler
 import javax.inject.Inject
 
 /**
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
+    private val errorHandler: ErrorHandler,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -70,7 +72,7 @@ class MovieDetailViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
-                                errorMessage = result.exception.message
+                                errorMessage = errorHandler.getErrorMessage(result.exception)
                             )
                         }
                     }

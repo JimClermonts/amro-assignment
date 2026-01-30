@@ -16,6 +16,7 @@ import nl.amro.android.app.domain.SortMoviesUseCase
 import nl.amro.android.app.domain.SortOption
 import nl.amro.android.app.model.MovieDto
 import nl.amro.android.app.model.Result
+import nl.amro.android.app.ui.util.ErrorHandler
 import javax.inject.Inject
 
 /**
@@ -27,7 +28,8 @@ class MoviesViewModel @Inject constructor(
     private val getTrendingMoviesUseCase: GetTrendingMoviesUseCase,
     private val getGenresUseCase: GetGenresUseCase,
     private val filterMoviesUseCase: FilterMoviesUseCase,
-    private val sortMoviesUseCase: SortMoviesUseCase
+    private val sortMoviesUseCase: SortMoviesUseCase,
+    private val errorHandler: ErrorHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MoviesUiState())
@@ -65,7 +67,7 @@ class MoviesViewModel @Inject constructor(
                         _uiState.update { 
                             it.copy(
                                 isLoading = false, 
-                                errorMessage = result.exception.message
+                                errorMessage = errorHandler.getErrorMessage(result.exception)
                             ) 
                         }
                     }
@@ -89,7 +91,7 @@ class MoviesViewModel @Inject constructor(
                     }
                     is Result.Error -> {
                         _uiState.update { 
-                            it.copy(errorMessage = result.exception.message) 
+                            it.copy(errorMessage = errorHandler.getErrorMessage(result.exception)) 
                         }
                     }
                     is Result.Loading -> { /* Ignore loading for genres */ }
